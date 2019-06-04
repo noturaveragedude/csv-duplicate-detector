@@ -3,7 +3,7 @@
 class CsvFile
 {
     /**
-     * @var string
+     * @var array
      */
     protected $csv;
 
@@ -18,28 +18,25 @@ class CsvFile
      * @param array|null $fileHeaders
      */
     protected $fileHeaders;
-    private $csvHeaders;
 
 
-    public function __construct($base64, array $headers= null) {
-        $this->csv = $this->getCsv($base64);
-        $this->csvHeaders = $this->getCsvHeaders();
-        try{
-            $headers = $headers ?? $this->csvHeaders;
-            $this->headers = $this->validateHeaders($headers);
-        } catch (\Exception $e) {
-            //TODO Display Error message
-        }
+    public function __construct($file, array $headers = []) {
+        $this->csv = $this->getCsv($file);
+        $this->fileHeaders = array_shift($this->csv);
+        $this->headers = $this->getHeaders($headers);
     }
 
-    private function getCsv($base64)
+    private function getCsv($file)
     {
-        return str_getcsv($base64);
+        $lines = file($file['tmp_name'], FILE_IGNORE_NEW_LINES);
+    
+        return array_map('str_getcsv', $lines);
     }
 
-    private function getCsvHeaders()
+    private function getHeaders(array $headers)
     {
-        return array_shift($this->csv);
+        return $headers ? 
+            $this->validateHeaders($headers) : $this->fileHeaders;
     }
 
     private function validateHeaders(array $headers)
@@ -51,9 +48,14 @@ class CsvFile
         throw new \Exception("headers do not match");
     }
 
-    public function checkForDuplicates()
+    public function top()
     {
+        return $this->headers;
+    }
 
+    public function body()
+    {
+        return $this->csv;
     }
 
 }
