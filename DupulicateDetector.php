@@ -25,6 +25,11 @@ class DuplicateDetector
     protected $columnDuplicates = [];
 
     /**
+     * @var int
+     */
+    protected $total;
+
+    /**
      * @var array
      */
     protected $columns = [];
