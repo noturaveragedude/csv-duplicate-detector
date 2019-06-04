@@ -35,7 +35,7 @@ class CsvFile
 
     private function getHeaders(array $headers)
     {
-        return $headers ? 
+        return $headers != null ? 
             $this->validateHeaders($headers) : $this->fileHeaders;
     }
 
