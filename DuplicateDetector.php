@@ -45,11 +45,10 @@ class DuplicateDetector
     {
         $this->columns = array_map(function($column) {
             return $this->fetchColumnData($column, 
-            array_search($column, $this->file->top()));
+            $this->file->position($column));
         }, $this->file->top());
         
         $this->getColumnDuplicates();
-        // print_r($this->columnDuplicates); die;
 
         $this->pushDuplicates();
 
@@ -91,7 +90,7 @@ class DuplicateDetector
         foreach ($this->file->top() as $index => $column) {
             $columnData = $this->columns[$index][$column];
             array_walk($columnData, $count_duplicate, $columnData);
-            $this->columnDuplicates[$column][] = $founds;
+            $this->columnDuplicates[$column] = $founds;
             $founds = [];
 
         }
@@ -106,10 +105,8 @@ class DuplicateDetector
         if ($this->level == "strict") {
             foreach ($this->file->top() as $head) {
                 $duplicates = $this->columnDuplicates[$head] ?? 0;
-                // print_r($duplicates); die;
                 if ($duplicates) {
-                    foreach ($duplicates as $duplicate) {
-                        foreach($duplicate as $dup => $rows)
+                    foreach($duplicates as $dup => $rows) {
                         $this->total += count($rows);
                         array_walk($rows, $map_duplicate_message, [$dup, $head]);
                     }

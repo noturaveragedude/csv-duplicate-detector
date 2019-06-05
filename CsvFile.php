@@ -41,6 +41,12 @@ class CsvFile
 
     private function validateHeaders(array $headers)
     {
+        $trim_withspace = function ($trimmable) {
+            return trim($trimmable);
+        };
+
+        $headers = array_map($trim_withspace, $headers);
+        
         if(! array_diff($headers, $this->fileHeaders)) {
             return $headers;
         }
@@ -56,6 +62,11 @@ class CsvFile
     public function body()
     {
         return $this->csv;
+    }
+
+    public function position($column)
+    {
+        return array_search($column, $this->fileHeaders);
     }
 
 }
