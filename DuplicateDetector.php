@@ -113,7 +113,7 @@ class DuplicateDetector
             foreach($this->file->top() as $head) {
                 $duplicates = $this->columnDuplicates[$head] ?? 0;
                 if ($duplicates) {
-                    $row_duplicates = array_merge($row_duplicates, array_values($duplicates));
+                    $row_duplicates[] = array_merge(...array_values($duplicates));
                 }
             }
             $duplicate_on_all_rows = call_user_func_array("array_intersect", $row_duplicates);
