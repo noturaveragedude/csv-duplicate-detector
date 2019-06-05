@@ -69,4 +69,13 @@ class CsvFile
         return array_search($column, $this->fileHeaders);
     }
 
+    public function top_to_string()
+    {
+        $stringed_top = "";
+        array_map(function($top) use(&$stringed_top){
+            $stringed_top .= $top . ", ";
+        }, $this->headers);
+        return rtrim($stringed_top, ", ");
+    }
+
 }

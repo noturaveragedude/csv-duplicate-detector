@@ -104,7 +104,8 @@ class DuplicateDetector
         };
 
         $map_loose_duplicate_message = function($row) {
-            $this->duplicates[] = "Possible Duplicate: On Line {$row}";
+            $this->duplicates[] = "Possible Duplicate: On Line {$row}. 
+            Found in Headers: {$this->file->top_to_string()}";
         };
 
         foreach ($this->file->top() as $head) {
