@@ -114,7 +114,7 @@ class DuplicateDetector
                 if ($this->level == "loose" && count($this->file->top()) > 1)  {
                     $row_duplicates = array_values($duplicates);
                     $duplicate_on_all_rows = count($row_duplicates) < 2 ?
-                        $row_duplicates[0] : 
+                        [] : 
                         call_user_func_array("array_intersect", 
                             $row_duplicates);
                         $this->total = count($duplicate_on_all_rows);
