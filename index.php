@@ -22,7 +22,7 @@ if (isset($_FILES['csv_file'])) {
 
     foreach ($values as $key => $value) {
         if ($value > 1) {
-            echo "The BVN " . $key . " is duplicated " . $value . " times\n";
+            echo "The BVN " . $key . " is duplicated " . $value . " times<br />";
         }
     }
 }
