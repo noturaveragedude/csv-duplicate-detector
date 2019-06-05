@@ -99,21 +99,35 @@ class DuplicateDetector
     private function pushDuplicates()
     {
         $map_duplicate_message = function($row, $index, $dupData) {
-            $this->duplicates[] = "Possible Duplicate: '{$dupData[0]}', Found in Header: {$dupData[1]}, On Line {$row}";
+            $this->duplicates[] = "Possible Duplicate: '{$dupData[0]}', 
+            Found in Header: {$dupData[1]}, On Line {$row}";
         };
 
-        if ($this->level == "strict") {
-            foreach ($this->file->top() as $head) {
-                $duplicates = $this->columnDuplicates[$head] ?? 0;
-                if ($duplicates) {
+        $map_loose_duplicate_message = function($row) {
+            $this->duplicates[] = "Possible Duplicate: On Line {$row}";
+        };
+
+        foreach ($this->file->top() as $head) {
+            $duplicates = $this->columnDuplicates[$head] ?? 0;
+            if ($duplicates) {
+                if ($this->level == "loose" && count($this->file->top()) > 1)  {
+                    $row_duplicates = array_values($duplicates);
+                    $duplicate_on_all_rows = count($row_duplicates) < 2 ?
+                        $row_duplicates[0] : 
+                        call_user_func_array("array_intersect", 
+                            $row_duplicates);
+                        $this->total = count($duplicate_on_all_rows);
+                        array_walk($duplicate_on_all_rows, $map_loose_duplicate_message);
+                        break;
+                } else {
                     foreach($duplicates as $dup => $rows) {
                         $this->total += count($rows);
                         array_walk($rows, $map_duplicate_message, [$dup, $head]);
                     }
                 }
             }
-            return $this;
         }
+        return $this;
     }
 
     public function duplicates()

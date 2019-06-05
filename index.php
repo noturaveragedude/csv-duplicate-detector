@@ -9,7 +9,7 @@
     <label> Choose Level </label>
     <select name="level">
         <option value="strict">strict</option>
-        <!-- <option value="loose">loose</option> -->
+        <option value="loose">loose</option>
     </select>
     <div style="margin-top: 10px">
         <label> Specify Headers, Seperate with Comma. Leave Blank To Check All </label>

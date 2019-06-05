@@ -35,17 +35,17 @@ class CsvFile
 
     private function getHeaders(array $headers)
     {
-        return $headers != null ? 
+        return ($headers != null && !in_array("", $headers)) ? 
             $this->validateHeaders($headers) : $this->fileHeaders;
     }
 
     private function validateHeaders(array $headers)
     {
-        $trim_withspace = function ($trimmable) {
+        $trim_whitespace = function ($trimmable) {
             return trim($trimmable);
         };
 
-        $headers = array_map($trim_withspace, $headers);
+        $headers = array_map($trim_whitespace, $headers);
         
         if(! array_diff($headers, $this->fileHeaders)) {
             return $headers;
