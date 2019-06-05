@@ -27,7 +27,7 @@ if (isset($_FILES['csv_file'])) {
         explode(",", $_POST['headers']) : [];
     $csv = new CsvFile($_FILES['csv_file'], $headers);
     $dectector = (new DuplicateDetector($csv, $_POST['level']))->detect();
-    echo "{$dectector->totals()} Duplicates Found" . "<br>";
+    echo "{$dectector->totals()} Duplicate(s) Found" . "<br>";
     foreach ($dectector->duplicates() as $message) {
         echo "{$message}" . "<br>";
     }

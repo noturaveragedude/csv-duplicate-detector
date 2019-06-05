@@ -108,19 +108,23 @@ class DuplicateDetector
             Found in Headers: {$this->file->top_to_string()}";
         };
 
-        foreach ($this->file->top() as $head) {
-            $duplicates = $this->columnDuplicates[$head] ?? 0;
-            if ($duplicates) {
-                if ($this->level == "loose" && count($this->file->top()) > 1)  {
-                    $row_duplicates = array_values($duplicates);
-                    $duplicate_on_all_rows = count($row_duplicates) < 2 ?
-                        $row_duplicates[0] : 
-                        call_user_func_array("array_intersect", 
-                            $row_duplicates);
-                        $this->total = count($duplicate_on_all_rows);
-                        array_walk($duplicate_on_all_rows, $map_loose_duplicate_message);
-                        break;
-                } else {
+        if ($this->level == "loose" && count($this->file->top()) > 1) {
+            $row_duplicates = [];
+            foreach($this->file->top() as $head) {
+                $duplicates = $this->columnDuplicates[$head] ?? 0;
+                if ($duplicates) {
+                    $row_duplicates = array_merge($row_duplicates, array_values($duplicates));
+                }
+            }
+            $duplicate_on_all_rows = call_user_func_array("array_intersect", $row_duplicates);
+            $this->total = count($duplicate_on_all_rows);
+            array_walk($duplicate_on_all_rows, $map_loose_duplicate_message);
+
+        } else {
+
+            foreach ($this->file->top() as $head) {
+                $duplicates = $this->columnDuplicates[$head] ?? 0;
+                if ($duplicates) {
                     foreach($duplicates as $dup => $rows) {
                         $this->total += count($rows);
                         array_walk($rows, $map_duplicate_message, [$dup, $head]);
